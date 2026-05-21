@@ -1,94 +1,272 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Piano Collection</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Sarabun', Georgia, sans-serif; background-color: #fdf9f3; color: #333; }
-    header { background-color: #1a1a1a; color: white; padding: 48px 20px 36px; text-align: center; }
-    header h1 { font-size: 2.6em; letter-spacing: 3px; margin-bottom: 10px; }
-    header p { font-size: 1.15em; color: #bbb; font-style: italic; }
-    .search-section { max-width: 640px; margin: 40px auto 0; padding: 0 20px; text-align: center; }
-    .search-section label { display: block; font-size: 1em; color: #555; margin-bottom: 10px; }
-    .search-wrapper { position: relative; }
-    .search-wrapper svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #999; pointer-events: none; }
-    #songSearch { width: 100%; padding: 13px 16px 13px 44px; font-size: 1.05em; border: 2px solid #d6cfc4; border-radius: 30px; background: #fff; color: #333; outline: none; transition: border-color 0.2s; }
-    #songSearch:focus { border-color: #a07850; }
-    .levels-section { max-width: 760px; margin: 48px auto 0; padding: 0 20px; }
-    .levels-section h2 { font-size: 1.3em; color: #444; margin-bottom: 20px; border-left: 4px solid #c9a96e; padding-left: 12px; }
-    .level-list { display: flex; flex-direction: column; gap: 12px; }
-    .level-item { display: flex; align-items: flex-start; gap: 14px; background: #fff; border: 1px solid #ede5d8; border-radius: 12px; padding: 16px 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
-    .level-badge { min-width: 52px; text-align: center; font-weight: bold; font-size: 0.95em; color: #fff; padding: 5px 8px; border-radius: 8px; line-height: 1.3; }
-    .lv1 { background-color: #6aaa6a; }
-    .lv2 { background-color: #5b9bd5; }
-    .lv3 { background-color: #f0a030; }
-    .lv4 { background-color: #d9534f; }
-    .lv5 { background-color: #8e44ad; }
-    .level-text strong { display: block; font-size: 1em; margin-bottom: 4px; color: #222; }
-    .level-text p { font-size: 0.93em; color: #666; line-height: 1.6; }
-    .sheet-wrapper { max-width: 960px; margin: 48px auto 60px; padding: 0 20px; }
-    .sheet-wrapper h3 { font-size: 1.2em; margin-bottom: 14px; color: #444; border-left: 4px solid #c9a96e; padding-left: 12px; }
-    iframe { width: 100%; height: 640px; border: 2px solid #e0d6c8; border-radius: 12px; background: white; }
-    #searchHint { display: none; text-align: center; font-size: 1em; padding: 14px 0 0; color: #a07850; }
-    footer { background-color: #1a1a1a; color: #aaa; text-align: center; padding: 28px 20px; font-size: 0.9em; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Piano Collection</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',Georgia,sans-serif;background:#fdf9f3;color:#333}
+header{background:#1a1a1a;color:#fff;padding:40px 20px 28px;text-align:center}
+header h1{font-size:clamp(1.8em,6vw,2.6em);letter-spacing:3px;margin-bottom:8px}
+header p{font-size:clamp(0.9em,3vw,1.05em);color:#bbb;font-style:italic}
+.search-wrap{max-width:580px;margin:28px auto 0;padding:0 16px}
+.search-wrap label{display:block;text-align:center;font-size:0.95em;color:#666;margin-bottom:8px}
+.search-box{position:relative}
+.search-box svg.ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#aaa;pointer-events:none}
+#q{width:100%;padding:13px 16px 13px 44px;font-size:1em;border:2px solid #d6cfc4;border-radius:30px;background:#fff;color:#333;outline:none;transition:border-color .2s;-webkit-appearance:none}
+#q:focus{border-color:#a07850}
+#smsg{text-align:center;margin-top:10px;font-size:0.9em;min-height:20px}
+.smsg-found{color:#2e7d32}
+.levels{max-width:700px;margin:32px auto 0;padding:0 16px}
+.levels h2{font-size:1.05em;color:#444;margin-bottom:14px;border-left:4px solid #c9a96e;padding-left:11px}
+.lcard{background:#fff;border:1px solid #ede5d8;border-radius:14px;padding:15px 16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.lcard-top{display:flex;align-items:flex-start;gap:12px}
+.badge{min-width:46px;text-align:center;font-weight:bold;font-size:0.85em;color:#fff;padding:5px 6px;border-radius:8px;line-height:1.3;flex-shrink:0;margin-top:2px}
+.lv1{background:#6aaa6a}.lv2{background:#5b9bd5}.lv3{background:#f0a030}.lv4{background:#d9534f}.lv5{background:#8e44ad}
+.ldesc strong{display:block;font-size:0.97em;color:#222;margin-bottom:3px}
+.ldesc p{font-size:0.88em;color:#666;line-height:1.5}
+.lexample{margin-top:10px;padding-top:10px;border-top:1px dashed #e0d6c8}
+.ex-label{font-size:0.82em;color:#888;margin-bottom:6px}
+.yt-link{display:inline-flex;align-items:center;gap:6px;color:#a07850;font-weight:bold;font-size:0.88em;text-decoration:none;padding:6px 12px;border:1px solid #d6cfc4;border-radius:20px;background:#faf6f0;transition:background .15s}
+.yt-link:hover{background:#f0e8d8}
+.yt-icon{width:18px;height:18px;flex-shrink:0}
+.songlist{max-width:960px;margin:32px auto 60px;padding:0 16px}
+.songlist h3{font-size:1.05em;color:#444;margin-bottom:12px;border-left:4px solid #c9a96e;padding-left:11px}
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.fbtn{border:1.5px solid #d6cfc4;background:#fff;border-radius:20px;padding:6px 14px;font-size:0.82em;cursor:pointer;transition:all .15s;font-family:inherit;color:#555}
+.fbtn:hover,.fbtn.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:9px}
+.scard{background:#fff;border:1.5px solid #ede5d8;border-radius:12px;padding:13px 15px;display:flex;flex-direction:column;gap:5px;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:box-shadow .15s,border-color .15s}
+.scard:hover{box-shadow:0 3px 10px rgba(0,0,0,.1)}
+.scard.hl{border-color:#a07850;box-shadow:0 0 0 2.5px #a0785035}
+.sname{font-size:0.95em;font-weight:bold;color:#222}
+.smeta{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.lvtag{font-size:0.75em;font-weight:bold;color:#fff;padding:2px 7px;border-radius:5px}
+.artist{font-size:0.8em;color:#888}
+.cattag{font-size:0.75em;color:#777;background:#f4f0ea;padding:2px 7px;border-radius:5px}
+.no-result{text-align:center;padding:40px 20px;color:#c0392b;font-size:1.05em;font-weight:bold;display:none}
+footer{background:#1a1a1a;color:#aaa;text-align:center;padding:22px 20px;font-size:0.85em}
+@media(max-width:500px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <header>
   <h1>Piano Collection</h1>
   <p>เลือกเรียนเพลงที่ชอบได้ด้วยตัวเอง</p>
 </header>
-<section class="search-section">
-  <label for="songSearch">ค้นหาเพลงที่ต้องการ</label>
-  <div class="search-wrapper">
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-    </svg>
-    <input type="text" id="songSearch" placeholder="พิมพ์ชื่อเพลง เช่น Canon, River Flows..." autocomplete="off" />
+<div class="search-wrap">
+  <label for="q">ค้นหาเพลงที่ต้องการ</label>
+  <div class="search-box">
+    <svg class="ico" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="q" placeholder="พิมพ์ชื่อเพลง เช่น Canon, Fur Elise, ลม..." autocomplete="off" autocorrect="off" spellcheck="false"/>
   </div>
-  <p id="searchHint"></p>
-</section>
-<section class="levels-section">
-  <h2>ระดับความยากของเพลง — Piano Folder</h2>
-  <div class="level-list">
-    <div class="level-item">
-      <span class="level-badge lv1">Lv.1</span>
-      <div class="level-text"><strong>ผู้เริ่มต้น</strong><p>เล่นทีละมือ หรือสองมือแบบง่ายๆ ที่ไม่ซับซ้อน</p></div>
-    </div>
-    <div class="level-item">
-      <span class="level-badge lv2">Lv.2</span>
-      <div class="level-text"><strong>มือซ้าย + มือขวาพร้อมกัน</strong><p>เล่นสองมือพร้อมกัน มือขวาเล่นทำนอง มือซ้ายเล่นคอร์ดประกอบ</p></div>
-    </div>
-    <div class="level-item">
-      <span class="level-badge lv3">Lv.3</span>
-      <div class="level-text"><strong>สองมือเป็นอิสระ</strong><p>สองมือเป็นอิสระต่อกัน แต่ละมือทำหน้าที่ของตัวเอง ไม่ติดขัด ไม่พึ่งจังหวะเดียวกัน</p></div>
-    </div>
-    <div class="level-item">
-      <span class="level-badge lv4">Lv.4</span>
-      <div class="level-text"><strong>เพิ่มสีสันและลูกเล่น</strong><p>เพิ่มสีสันให้เพลง ใส่ลูกเล่นได้ เช่น เสียงประสาน หรือทำนองแทรกระหว่างประโยคเพลง</p></div>
-    </div>
-    <div class="level-item">
-      <span class="level-badge lv5">Lv.5</span>
-      <div class="level-text"><strong>ระดับมืออาชีพ</strong><p>เล่นได้อย่างมืออาชีพ ใช้เทคนิคขั้นสูงในการตีความเพลงให้มีมิติและอารมณ์ลึกขึ้น</p></div>
-    </div>
-  </div>
-</section>
-<div class="sheet-wrapper">
-  <h3>รายการเพลงทั้งหมด</h3>
-  <iframe id="songFrame" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTCWW1n3zG4sQRxEgOSTd1ssqgPI_hKNsvOjmRAEXAoRXYymoRiUm_O6BylGWU376YF9jFMuUgs_sRj/pubhtml?gid=702304224&single=true" frameborder="0" allowfullscreen></iframe>
+  <p id="smsg"></p>
 </div>
+<section class="levels">
+  <h2>ระดับความยากของเพลง — Piano Folder</h2>
+  <div class="lcard">
+    <div class="lcard-top">
+      <span class="badge lv1">Lv.1</span>
+      <div class="ldesc"><strong>ผู้เริ่มต้น</strong><p>เล่นทีละมือ หรือสองมือแบบง่ายๆ ที่ไม่ซับซ้อน</p></div>
+    </div>
+    <div class="lexample">
+      <div class="ex-label">ตัวอย่างเพลง: Fur Elise (easy)</div>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=nxs96uKdwh4" target="_blank" rel="noopener">
+        <svg class="yt-icon" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#FF0000"/><polygon fill="#fff" points="9.5,7 18,12 9.5,17"/></svg>ดูตัวอย่าง YouTube
+      </a>
+    </div>
+  </div>
+  <div class="lcard">
+    <div class="lcard-top">
+      <span class="badge lv2">Lv.2</span>
+      <div class="ldesc"><strong>เล่นสองมือพร้อมกัน</strong><p>มือขวาเล่นทำนอง มือซ้ายเล่นคอร์ดประกอบ</p></div>
+    </div>
+    <div class="lexample">
+      <div class="ex-label">ตัวอย่างเพลง: ความในใจ — ost. ปริศนา</div>
+      <a class="yt-link" href="https://youtu.be/GFpvR1brsRk?si=_tpKWsTaeiCruNVt" target="_blank" rel="noopener">
+        <svg class="yt-icon" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#FF0000"/><polygon fill="#fff" points="9.5,7 18,12 9.5,17"/></svg>ดูตัวอย่าง YouTube
+      </a>
+    </div>
+  </div>
+  <div class="lcard">
+    <div class="lcard-top">
+      <span class="badge lv3">Lv.3</span>
+      <div class="ldesc"><strong>สองมือเป็นอิสระต่อกัน</strong><p>แต่ละมือทำหน้าที่ของตัวเอง ไม่ติดขัด ไม่พึ่งจังหวะเดียวกัน</p></div>
+    </div>
+    <div class="lexample">
+      <div class="ex-label">ตัวอย่างเพลง: Canon in C</div>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=vl9-RTx3iI4&list=PLphrsKeHzK4D-3OyodFFBTgv9qTgyPUMq" target="_blank" rel="noopener">
+        <svg class="yt-icon" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#FF0000"/><polygon fill="#fff" points="9.5,7 18,12 9.5,17"/></svg>ดูตัวอย่าง YouTube
+      </a>
+    </div>
+  </div>
+  <div class="lcard">
+    <div class="lcard-top">
+      <span class="badge lv4">Lv.4</span>
+      <div class="ldesc"><strong>เพิ่มสีสันให้เพลง</strong><p>ใส่ลูกเล่นได้ เช่น เสียงประสาน หรือทำนองแทรกระหว่างประโยคเพลง</p></div>
+    </div>
+    <div class="lexample">
+      <div class="ex-label">ตัวอย่างเพลง: Nothing Gonna Change My Love for You</div>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=PR2_jpoAEfk&list=PLphrsKeHzK4AcI23ppZHWNF9wKyFbH6Xo&index=8" target="_blank" rel="noopener">
+        <svg class="yt-icon" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#FF0000"/><polygon fill="#fff" points="9.5,7 18,12 9.5,17"/></svg>ดูตัวอย่าง YouTube
+      </a>
+    </div>
+  </div>
+  <div class="lcard">
+    <div class="lcard-top">
+      <span class="badge lv5">Lv.5</span>
+      <div class="ldesc"><strong>ระดับมืออาชีพ</strong><p>เล่นได้อย่างมืออาชีพ ใช้เทคนิคขั้นสูงในการตีความเพลงให้มีมิติและอารมณ์ลึกขึ้น</p></div>
+    </div>
+    <div class="lexample">
+      <div class="ex-label">ตัวอย่างเพลง: Love Story (Francis Lai)</div>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=Cp5XkKrbQLY&list=PLphrsKeHzK4D-3OyodFFBTgv9qTgyPUMq&index=5" target="_blank" rel="noopener">
+        <svg class="yt-icon" viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#FF0000"/><polygon fill="#fff" points="9.5,7 18,12 9.5,17"/></svg>ดูตัวอย่าง YouTube
+      </a>
+    </div>
+  </div>
+</section>
+<section class="songlist">
+  <h3 id="ltitle">รายการเพลงทั้งหมด (81 เพลง)</h3>
+  <div class="filters" id="filters">
+    <button class="fbtn on" data-cat="all">ทั้งหมด</button>
+    <button class="fbtn" data-cat="ไทย">ไทย</button>
+    <button class="fbtn" data-cat="ไทยเก่า">ไทยเก่า</button>
+    <button class="fbtn" data-cat="สากล">สากล</button>
+    <button class="fbtn" data-cat="บรรเลง">บรรเลง</button>
+  </div>
+  <div class="grid" id="grid"></div>
+  <p class="no-result" id="nores">เพลงนี้ยังไม่มีใน List</p>
+</section>
 <footer>&copy; 2026 PianoFolder Music Studio</footer>
 <script>
-  const searchInput = document.getElementById('songSearch');
-  const hint = document.getElementById('searchHint');
-  searchInput.addEventListener('input', function () {
-    const q = this.value.trim();
-    if (!q) { hint.style.display = 'none'; hint.textContent = ''; return; }
-    hint.textContent = 'กำลังค้นหา "' + q + '" — เลื่อนดูรายการในตารางด้านล่าง';
-    hint.style.display = 'block';
+var S=[
+{id:"PC001",n:"Fur Elise",a:"Beethoven",lv:1.5,c:"บรรเลง"},
+{id:"PC002",n:"น้ำเซาะทราย (Key: Gm)",a:"จรัส เศตาภรณ์",lv:3,c:"ไทยเก่า"},
+{id:"PC003",n:"แสนรัก (แจ้ ดนุพล)",a:"แจ้ ดนุพล",lv:2,c:"ไทยเก่า"},
+{id:"PC004",n:"ฉันจะฝันถึงเธอ",a:"สุภัทรา อินทรภักดี",lv:3,c:"ไทย"},
+{id:"PC005",n:"Kiss the Rain (Easy)",a:"Yiruma",lv:2,c:"บรรเลง"},
+{id:"PC006",n:"Canon in C",a:"Pachelbel",lv:3,c:"บรรเลง"},
+{id:"PC007",n:"River Flows in You (Easy)",a:"Yiruma",lv:3,c:"บรรเลง"},
+{id:"PC008",n:"When You Say Nothing at All",a:"Ronan Keating",lv:3,c:"สากล"},
+{id:"PC009",n:"Reason",a:"Yiruma",lv:3.5,c:"สากล"},
+{id:"PC010",n:"กลิ่นดอกไม้",a:"Newery",lv:3,c:"ไทย"},
+{id:"PC011",n:"อยากให้รู้ว่ารักเธอ",a:"Joni Anwar",lv:3,c:"ไทย"},
+{id:"PC012",n:"Imagine",a:"John Lennon",lv:3,c:"สากล"},
+{id:"PC013",n:"ลม",a:"Kala",lv:2,c:"ไทย"},
+{id:"PC014",n:"คู่กรรม",a:"ต้อมเรนโบว์ กมลชนก",lv:4,c:"ไทยเก่า"},
+{id:"PC015",n:"บุพเพสันนิวาส",a:"OST.บุพเพสันนิวาส",lv:3,c:"ไทย"},
+{id:"PC016",n:"ห่างไกลเหลือเกิน",a:"Boyd Kosiyabong",lv:4,c:"ไทย"},
+{id:"PC017",n:"รัก (ปุ๊ อัญชลี)",a:"ปุ๊ อัญชลี",lv:3,c:"ไทยเก่า"},
+{id:"PC018",n:"Right Here Waiting",a:"Richard Marx",lv:2,c:"สากล"},
+{id:"PC019",n:"คืนให้ (Sarah)",a:"Sarah",lv:3,c:"ไทย"},
+{id:"PC020",n:"รักแรก",a:"นนท์",lv:3,c:"ไทย"},
+{id:"PC021",n:"จังหวะตกหลุมรัก (DIDIxDADA)",a:"DIDIxDADA",lv:2.5,c:"ไทย"},
+{id:"PC022",n:"ความรัก (แนน สาธิดา)",a:"แนน สาธิดา",lv:3,c:"ไทยเก่า"},
+{id:"PC023",n:"ดาว (Aloft)",a:"Aloft",lv:3,c:"ไทย"},
+{id:"PC024",n:"คนใต้เดือน (Labanoon)",a:"Labanoon",lv:3,c:"ไทย"},
+{id:"PC025",n:"เธอ (Silly Fools)",a:"Silly Fools",lv:3,c:"ไทย"},
+{id:"PC026",n:"ยังรัก (Paradox)",a:"Paradox",lv:3,c:"ไทย"},
+{id:"PC027",n:"Marriage de Amour",a:"Richard Clayderman",lv:4,c:"บรรเลง"},
+{id:"PC028",n:"My Heart Will Go On (Titanic)",a:"Celine Dion",lv:3,c:"สากล"},
+{id:"PC029",n:"A Thousand Years",a:"Christina Perri",lv:3,c:"สากล"},
+{id:"PC030",n:"รักไม่ต้องการเวลา (Klear)",a:"Klear",lv:3,c:"ไทย"},
+{id:"PC031",n:"คือหัตถาครองพิภพ (ศรัณย่า)",a:"ศรัณย่า",lv:3,c:"ไทยเก่า"},
+{id:"PC032",n:"เธอหมุนรอบฉัน ฉันหมุนรอบเธอ",a:"เฉลียง",lv:3,c:"ไทย"},
+{id:"PC033",n:"Nothing's Gonna Change My Love",a:"George Benson",lv:4,c:"สากล"},
+{id:"PC034",n:"ใจรัก (สุชาติ ชวางกูร)",a:"สุชาติ ชวางกูร",lv:3,c:"ไทยเก่า"},
+{id:"PC035",n:"Love Story (Francis Lai)",a:"Francis Lai",lv:5,c:"บรรเลง"},
+{id:"PC036",n:"ความในใจ",a:"OST.ปริศนา",lv:2,c:"ไทยเก่า"},
+{id:"PC037",n:"หน้าที่ของความรัก",a:"PAUSE Feat. เล็ก พงษธร",lv:3,c:"ไทย"},
+{id:"PC038",n:"A Rocket to the Moon",a:"A Rocket to the Moon",lv:3,c:"สากล"},
+{id:"PC039",n:"แต่ปางก่อน",a:"อ๊อด คีรีบูน-โอ ปุยฝ้าย",lv:3,c:"ไทยเก่า"},
+{id:"PC040",n:"สายชล",a:"จันทนีย์ อูนากูล",lv:2,c:"ไทยเก่า"},
+{id:"PC041",n:"Endless Rain",a:"X-Japan",lv:4,c:"สากล"},
+{id:"PC042",n:"Perfect",a:"Ed Sheeran",lv:2.5,c:"สากล"},
+{id:"PC043",n:"ยังคงรอ",a:"Michael Learns to Rock",lv:3,c:"สากล"},
+{id:"PC044",n:"แม่",a:"ศิรศักดิ์ อิทธิพลพงศ์",lv:3,c:"ไทย"},
+{id:"PC045",n:"Thinking Out Loud",a:"Ed Sheeran",lv:3,c:"สากล"},
+{id:"PC046",n:"เหนื่อยไหมเธอ (BOWKYLION)",a:"BOWKYLION",lv:2.5,c:"ไทย"},
+{id:"PC047",n:"จันทร์เจ้า",a:"มาลีวัลย์ เจมีน่า",lv:3,c:"ไทยเก่า"},
+{id:"PC048",n:"Can't Help Falling in Love",a:"Elvis Presley",lv:2,c:"สากล"},
+{id:"PC049",n:"The Prayer",a:"Celine Dion",lv:4,c:"สากล"},
+{id:"PC050",n:"กี่ครั้ง (BNK48)",a:"BNK48",lv:2,c:"ไทย"},
+{id:"PC051",n:"คนที่ใช่",a:"Potato",lv:3,c:"ไทย"},
+{id:"PC052",n:"เพื่อเธอ",a:"Takkatan Chonlada",lv:3,c:"ไทย"},
+{id:"PC053",n:"เราไม่ใช่แค่เพื่อน",a:"Three Man Down",lv:3,c:"ไทย"},
+{id:"PC054",n:"ฝากไว้ในใจเธอ",a:"Bodyslam",lv:3,c:"ไทย"},
+{id:"PC055",n:"Fly Me to the Moon",a:"Frank Sinatra",lv:2.5,c:"สากล"},
+{id:"PC056",n:"Yesterday",a:"The Beatles",lv:2,c:"สากล"},
+{id:"PC057",n:"Piano Man",a:"Billy Joel",lv:3,c:"สากล"},
+{id:"PC058",n:"เมดเล่ย์เพลงลูกทุ่ง",a:"Various",lv:4.5,c:"ไทย"},
+{id:"PC059",n:"กุหลาบหยก",a:"พุ่มพวง ดวงจันทร์",lv:3,c:"ไทยเก่า"},
+{id:"PC060",n:"ลาวดวงเดือน",a:"เพลงไทยเดิม",lv:3,c:"ไทยเก่า"},
+{id:"PC061",n:"คำเชย ๆ",a:"big & the superband",lv:2.5,c:"ไทย"},
+{id:"PC062",n:"Eyes on Me (FF8 Julia Ver.)",a:"Nobuo Uematsu",lv:4,c:"บรรเลง"},
+{id:"PC063",n:"อย่างที่ฉันนั้นเป็นของเธอ",a:"OST. Affair รักเล่นกล",lv:3,c:"ไทย"},
+{id:"PC064",n:"เพลงรัก (Three Man Down)",a:"Three Man Down",lv:3.5,c:"ไทย"},
+{id:"PC065",n:"How Far I'll Go Easy (Moana)",a:"Disney",lv:2,c:"บรรเลง"},
+{id:"PC066",n:"น้ำเซาะทราย Key: Em (Hard)",a:"จรัส เศตาภรณ์",lv:4,c:"ไทยเก่า"},
+{id:"PC067",n:"ทรายกับทะเล",a:"นันทิดา แก้วบัวสาย",lv:3,c:"ไทย"},
+{id:"PC068",n:"Edelweiss",a:"The Man In The High Castle",lv:2,c:"สากล"},
+{id:"PC069",n:"Love Me (Yiruma)",a:"Yiruma",lv:4,c:"บรรเลง"},
+{id:"PC070",n:"ข้างกาย (Safeplanet)",a:"Safeplanet",lv:4,c:"ไทย"},
+{id:"PC071",n:"ใจสมใจ",a:"อูน TheChanisara",lv:2.5,c:"ไทย"},
+{id:"PC072",n:"Always with Me (Spirited Away)",a:"Joe Hisaishi",lv:2,c:"บรรเลง"},
+{id:"PC073",n:"พระจันทร์แทนใจ",a:"เติ้งลี่จวิน",lv:2.5,c:"ไทย"},
+{id:"PC074",n:"ว่าว",a:"มีนตรา อินทิรา",lv:3,c:"ไทย"},
+{id:"PC075",n:"If I Ain't Got You",a:"Alicia Keys",lv:4,c:"สากล"},
+{id:"PC076",n:"Beautiful in White",a:"Shane Filan",lv:2,c:"สากล"},
+{id:"PC077",n:"Just for You (BadMixy)",a:"BadMixy",lv:3,c:"ไทย"},
+{id:"PC078",n:"ฝากใจ (Ink Waruntorn)",a:"Ink Waruntorn",lv:3,c:"ไทย"},
+{id:"PC079",n:"A Lover's Concerto",a:"Kelly Chen",lv:2,c:"สากล"},
+{id:"PC080",n:"Say Anything (X-Japan)",a:"X-Japan",lv:3.5,c:"สากล"},
+{id:"PC081",n:"La Maritza",a:"Sylvie Vartan",lv:2.5,c:"บรรเลง"}
+];
+function lc(l){return l<=1.9?'lv1':l<=2.9?'lv2':l<=3.9?'lv3':l<=4.9?'lv4':'lv5';}
+function render(list){
+  var g=document.getElementById('grid');
+  g.innerHTML=list.map(function(s){
+    return '<div class="scard" id="'+s.id+'"><div class="sname">'+s.n+'</div>'
+      +'<div class="smeta"><span class="lvtag '+lc(s.lv)+'">Lv.'+s.lv+'</span>'
+      +'<span class="artist">'+s.a+'</span>'
+      +'<span class="cattag">'+s.c+'</span></div></div>';
+  }).join('');
+  document.getElementById('ltitle').textContent='รายการเพลงทั้งหมด ('+list.length+' เพลง)';
+}
+var cat='all',qv='';
+function go(){
+  var q=qv.toLowerCase().trim();
+  var r=S.filter(function(s){
+    return (cat==='all'||s.c===cat)&&(!q||s.n.toLowerCase().indexOf(q)>-1||s.a.toLowerCase().indexOf(q)>-1);
   });
+  render(r);
+  var msg=document.getElementById('smsg');
+  var no=document.getElementById('nores');
+  if(q){
+    if(!r.length){msg.textContent='';msg.className='';no.style.display='block';}
+    else{
+      no.style.display='none';
+      msg.textContent='พบ '+r.length+' เพลง';msg.className='smsg-found';
+      setTimeout(function(){
+        var f=document.querySelector('.scard');
+        if(f){f.scrollIntoView({behavior:'smooth',block:'center'});
+          document.querySelectorAll('.scard').forEach(function(x){x.classList.remove('hl');});
+          f.classList.add('hl');}
+      },60);
+    }
+  } else {
+    msg.textContent='';msg.className='';no.style.display='none';
+    document.querySelectorAll('.scard').forEach(function(x){x.classList.remove('hl');});
+  }
+}
+document.getElementById('q').addEventListener('input',function(){qv=this.value;go();});
+document.getElementById('filters').addEventListener('click',function(e){
+  var b=e.target.closest('.fbtn');if(!b)return;
+  document.querySelectorAll('.fbtn').forEach(function(x){x.classList.remove('on');});
+  b.classList.add('on');cat=b.dataset.cat;go();
+});
+render(S);
 </script>
 </body>
 </html>
