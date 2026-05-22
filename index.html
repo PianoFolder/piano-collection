@@ -178,39 +178,68 @@ var S=[
 {id:"PC080",n:"Say Anything (X-Japan)",a:"X-Japan",lv:3.5,c:"สากล",yt:"",buy:""},
 {id:"PC081",n:"La Maritza",a:"Sylvie Vartan",lv:2.5,c:"บรรเลง",yt:"",buy:""}
 ];
-function lc(l){return l<=1.9?'lv1':l<=2.9?'lv2':l<=3.9?'lv3':l<=4.9?'lv4':'lv5';}
-function render(list){
+function lc(l){return l<=1.9?'lv1':l<=2.9?'lv2':l<=3.4?'lv3':l<=4.4?'lv4':'lv5'}
+function lvLabel(l){return l<=1.9?'Lv.1':l<=2.9?'Lv.2':l<=3.4?'Lv.3':l<=4.4?'Lv.4':'Lv.5'}
+function render(list,hl){
   var g=document.getElementById('grid');
+  if(!list.length){g.innerHTML='';document.getElementById('nores').style.display='block';document.getElementById('ltitle').textContent='ไม่พบเพลงที่ค้นหา';return;}
+  document.getElementById('nores').style.display='none';
   g.innerHTML=list.map(function(s){
-    var yb=s.yt?'<a class="btn-yt" href="'+s.yt+'" target="_blank" rel="noopener">'+YS+' ฟังตัวอย่าง</a>':'';
-    var bb=s.buy
-      ?'<a class="btn-buy" href="'+s.buy+'" target="_blank" rel="noopener">'+BS+' สมัครเรียน</a>'
-      :'<span class="btn-buy off">'+BS+' สมัครเรียน</span>';
-    return '<div class="scard" id="'+s.id+'">'
-      +'<div class="sname">'+s.n+'</div>'
-      +'<div class="smeta"><span class="lvtag '+lc(s.lv)+'">Lv.'+s.lv+'</span>'
-      +'<span class="artist">'+s.a+'</span>'
-      +'<span class="cattag">'+s.c+'</span></div>'
-      +'<div class="card-btns">'+yb+bb+'</div>'
-      +'</div>';
+    var cls=lc(s.lv);
+    var ytBtn=s.yt
+      ?'<a class="btn-yt" href="'+s.yt+'" target="_blank" rel="noopener">'+YS+'ฟังตัวอย่าง</a>'
+      :'<span class="btn-yt off">'+YS+'ฟังตัวอย่าง</span>';
+    var buyBtn=s.buy
+      ?'<a class="btn-buy" href="'+s.buy+'" target="_blank" rel="noopener">'+BS+'สมัครเรียน</a>'
+      :'<span class="btn-buy off">'+BS+'สมัครเรียน</span>';
+    return '<div class="scard'+(hl&&s.id===hl?' hl':'')+'"><div class="sname">'+s.n+'</div><div class="smeta"><span class="lvtag '+cls+'">'+lvLabel(s.lv)+'</span><span class="artist">'+s.a+'</span><span class="cattag">'+s.c+'</span></div><div class="card-btns">'+ytBtn+buyBtn+'</div></div>';
   }).join('');
   document.getElementById('ltitle').textContent='รายการเพลงทั้งหมด ('+list.length+' เพลง)';
 }
-var cat='all',qv='';
-function go(){
-  var q=qv.toLowerCase().trim();
-  var r=S.filter(function(s){return(cat==='all'||s.c===cat)&&(!q||s.n.toLowerCase().indexOf(q)>-1||s.a.toLowerCase().indexOf(q)>-1);});
-  render(r);
-  var msg=document.getElementById('smsg'),no=document.getElementById('nores');
-  if(q){
-    if(!r.length){msg.textContent='';msg.className='';no.style.display='block';}
-    else{no.style.display='none';msg.textContent='พบ '+r.length+' เพลง';msg.className='smsg-found';
-      setTimeout(function(){var f=document.querySelector('.scard');if(f){f.scrollIntoView({behavior:'smooth',block:'center'});document.querySelectorAll('.scard').forEach(function(x){x.classList.remove('hl');});f.classList.add('hl');}},60);}
-  }else{msg.textContent='';msg.className='';no.style.display='none';document.querySelectorAll('.scard').forEach(function(x){x.classList.remove('hl');});}
+function parseLvQuery(q){
+  // Match patterns: lv1, lv.1, lv 1, level1, level 1, ระดับ1
+  var m=q.match(/(?:lv|level|ระดับ)\.?\s*(\d+(?:\.\d+)?)/i);
+  return m?parseFloat(m[1]):null;
 }
-document.getElementById('q').addEventListener('input',function(){qv=this.value;go();});
-document.getElementById('filters').addEventListener('click',function(e){var b=e.target.closest('.fbtn');if(!b)return;document.querySelectorAll('.fbtn').forEach(function(x){x.classList.remove('on');});b.classList.add('on');cat=b.dataset.cat;go();});
-render(S);
+function matchLv(songLv, queryLv){
+  // Match by level group
+  var sg=lc(songLv);
+  var qg='lv'+queryLv;
+  // Also match e.g. lv1.5 -> lv1 group
+  if(queryLv===1)return sg==='lv1';
+  if(queryLv===2)return sg==='lv2';
+  if(queryLv===3)return sg==='lv3';
+  if(queryLv===4)return sg==='lv4';
+  if(queryLv===5)return sg==='lv5';
+  return false;
+}
+var curCat='all';
+function doFilter(){
+  var raw=document.getElementById('q').value.trim();
+  var q=raw.toLowerCase();
+  var lvQ=parseLvQuery(q);
+  var list=S.filter(function(s){
+    var catOk=curCat==='all'||s.c===curCat;
+    if(!catOk)return false;
+    if(!q)return true;
+    if(lvQ!==null)return matchLv(s.lv,lvQ);
+    return s.n.toLowerCase().indexOf(q)>-1||s.a.toLowerCase().indexOf(q)>-1||s.c.toLowerCase().indexOf(q)>-1;
+  });
+  var smsg=document.getElementById('smsg');
+  if(raw&&list.length){smsg.textContent='พบ '+list.length+' เพลง';smsg.className='smsg-found';}
+  else{smsg.textContent='';smsg.className='';}
+  render(list,'');
+}
+document.getElementById('q').addEventListener('input',doFilter);
+document.getElementById('filters').addEventListener('click',function(e){
+  var b=e.target.closest('.fbtn');
+  if(!b)return;
+  document.querySelectorAll('.fbtn').forEach(function(x){x.classList.remove('on');});
+  b.classList.add('on');
+  curCat=b.dataset.cat;
+  doFilter();
+});
+render(S,'');
 </script>
 </body>
 </html>
