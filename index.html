@@ -56,6 +56,16 @@ header p{font-size:clamp(0.9em,3vw,1.05em);color:#bbb;font-style:italic}
 .no-result{text-align:center;padding:40px 20px;color:#c0392b;font-size:1.05em;font-weight:bold;display:none}
 footer{background:#1a1a1a;color:#aaa;text-align:center;padding:22px 20px;font-size:0.85em}
 @media(max-width:500px){.grid{grid-template-columns:1fr}}
+
+.preview{max-width:760px;margin:30px auto 0;padding:0 16px}
+.preview h2{font-size:1.05em;color:#444;margin-bottom:14px;border-left:4px solid #c9a96e;padding-left:11px}
+.vbox{position:relative;width:100%;padding-top:56.25%;border-radius:16px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.18);background:#000;cursor:pointer}
+.vbox iframe,.vbox img,.vbox .play{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.vbox img{object-fit:cover}
+.vbox .play{display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.28);transition:background .15s}
+.vbox:hover .play{background:rgba(0,0,0,.4)}
+.vbox .play svg{width:80px;height:80px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+.vcap{text-align:center;font-size:0.88em;color:#777;margin-top:10px}
 </style>
 </head>
 <body>
@@ -63,6 +73,15 @@ footer{background:#1a1a1a;color:#aaa;text-align:center;padding:22px 20px;font-si
 <h1>Piano Collection</h1>
 <p>เลือกเรียนเพลงที่ชอบได้ด้วยตัวเอง</p>
 </header>
+<section class="preview">
+<h2>ตัวอย่างการเรียนในคอร์ส Piano Collection</h2>
+<div class="vbox" id="vbox" onclick="playPreview()">
+<img id="vthumb" src="https://i.ytimg.com/vi/bHZisWVKp88/hqdefault.jpg" alt="ตัวอย่างคอร์ส Piano Collection" loading="lazy"/>
+<div class="play"><svg viewBox="0 0 68 48"><path d="M66.5 7.7a8 8 0 0 0-5.6-5.7C56 .6 34 .6 34 .6s-22 0-26.9 1.4a8 8 0 0 0-5.6 5.7A83 83 0 0 0 .1 24a83 83 0 0 0 1.4 16.3 8 8 0 0 0 5.6 5.7C12 47.4 34 47.4 34 47.4s22 0 26.9-1.4a8 8 0 0 0 5.6-5.7A83 83 0 0 0 67.9 24a83 83 0 0 0-1.4-16.3z" fill="#f00"/><path d="M27 34.5 45 24 27 13.5z" fill="#fff"/></svg></div>
+</div>
+<p class="vcap">กดปุ่มเล่นเพื่อดูว่าคอร์สนี้หน้าตาเป็นยังไง เรียนยังไง</p>
+</section>
+
 <div class="search-wrap">
 <label for="q">ค้นหาเพลง: ชื่อเพลง ศิลปิน หรือ lv.</label>
 <div class="search-box">
@@ -180,6 +199,20 @@ var S=[
 {id:"PC080",n:"Say Anything (X-Japan)",a:"X-Japan",lv:3.5,c:"สากล",yt:"https://youtu.be/IReAygWPxZ4",buy:""},
 {id:"PC081",n:"La Maritza",a:"Sylvie Vartan",lv:2.5,c:"สากล",yt:"https://youtu.be/UE7GbBXVHsI",buy:""}
 ];
+
+function playPreview(){
+ var b=document.getElementById('vbox');
+ if(b.dataset.loaded)return;
+ b.dataset.loaded='1';
+ var f=document.createElement('iframe');
+ f.src='https://www.youtube-nocookie.com/embed/bHZisWVKp88?autoplay=1&rel=0';
+ f.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+ f.setAttribute('allowfullscreen','');
+ f.title='ตัวอย่างคอร์ส Piano Collection';
+ b.innerHTML='';
+ b.appendChild(f);
+ b.style.cursor='default';
+}
 function lc(l){return l<=1.9?'lv1':l<=2.9?'lv2':l<=3.9?'lv3':l<=4.9?'lv4':'lv5'}
 function parseLvQuery(q){var m=q.match(/lv\.?(\d+(?:\.\d+)?)/i);return m?parseFloat(m[1]):null;}
 function matchLv(slv,lvQ){if(lvQ===null)return true;if(slv===lvQ)return true;var base=Math.floor(lvQ);return slv>=base&&slv<base+1;}
@@ -210,6 +243,9 @@ if(lvQ!==null)return matchLv(s.lv,lvQ);
 return s.n.toLowerCase().indexOf(q)>-1||s.a.toLowerCase().indexOf(q)>-1||s.c.toLowerCase().indexOf(q)>-1;
 });
 var smsg=document.getElementById('smsg');
+var lvlSec=document.querySelector('.levels');
+if(lvlSec){lvlSec.style.display=raw?'none':'';}
+
 if(raw&&list.length){smsg.textContent='พบ '+list.length+' เพลง';smsg.className='smsg-found';}
 else{smsg.textContent='';smsg.className='';}
 render(list,'');
