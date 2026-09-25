@@ -286,19 +286,20 @@ const PAY = {                               // ข้อมูลโอนเง
   name: 'นาย สุรัฐ อชิรเสนา'
 };
 const ORDER_HEAD = 'สมัคร Piano Collection'; // บรรทัดแรกของข้อความที่นักเรียนส่งมาใน LINE
+const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTCWW1n3zG4sQRxEgOSTd1ssqgPI_hKNsvOjmRAEXAoRXYymoRiUm_O6BylGWU376YF9jFMuUgs_sRj/pub?gid=702304224&single=true&output=csv'; // ลิงก์ CSV จาก Google Sheet (File > Share > Publish to web) — ว่างไว้ = ใช้รายการเพลงสำรองด้านล่าง
 const PRICE = {1:490, 2:980, 3:1290, 4:1780, 5:1990}; // 2 = 490×2 · 4 = 1,290+490
 const SRC_NAME = {'2hands':'หนังสือ ปลดล็อกเปียโน 2 มือ', 'book1':'หนังสือ รู้งี้...เล่นเปียโนได้นานแล้ว'};
-/* ===== เพิ่มเพลงใหม่: ต่อท้ายรายการนี้ รหัสห้ามซ้ำ ===== */
+/* ===== รายการเพลงสำรอง: ใช้เมื่อโหลดจาก Google Sheet ไม่ได้ (หน้าเว็บจะอ่านจาก Sheet เป็นหลัก) ===== */
 const SONGS = [
   {"id":"PC001","n":"Fur Elise","a":"Beethoven","lv":1.5,"c":"บรรเลง","yt":"nxs96uKdwh4"},
   {"id":"PC002","n":"น้ำเซาะทราย (Key: Gm)","a":"จรัส เศตาภรณ์","lv":3,"c":"ไทยเก่า","yt":"w_AkG-_JgTA"},
   {"id":"PC003","n":"แสนรัก (แจ้ ดนุพล)","a":"แจ้ ดนุพล","lv":2,"c":"ไทยเก่า","yt":"C2zB3mz07e4"},
-  {"id":"PC004","n":"ฉันจะฝันถึงเธอ","a":"สุภัทรา อินทรภักดี","lv":3,"c":"ไทย","yt":"Ss6Vyzpp_kI"},
+  {"id":"PC004","n":"ฉันจะฝันถึงเธอ","a":"สุภัทรา อินทรภักดี","lv":3,"c":"ไทยเก่า","yt":"Ss6Vyzpp_kI"},
   {"id":"PC005","n":"Kiss the Rain (Easy)","a":"Yiruma","lv":2,"c":"บรรเลง","yt":"Pq9P2CAvlHE"},
   {"id":"PC006","n":"Canon in C","a":"Pachelbel","lv":3,"c":"บรรเลง","yt":"vl9-RTx3iI4"},
   {"id":"PC007","n":"River Flows in You (Easy)","a":"Yiruma","lv":3,"c":"บรรเลง","yt":"he4jE87hSuE"},
   {"id":"PC008","n":"When You Say Nothing at All","a":"Ronan Keating","lv":3,"c":"สากล","yt":"B3noHWSi70w"},
-  {"id":"PC009","n":"Reason","a":"Yiruma","lv":3.5,"c":"สากล","yt":"fDpKkGzMtNY"},
+  {"id":"PC009","n":"Reason","a":"Yiruma","lv":3.5,"c":"เกาหลี","yt":"fDpKkGzMtNY"},
   {"id":"PC010","n":"กลิ่นดอกไม้","a":"Newery","lv":3,"c":"ไทย","yt":"trMXn3zLy3U"},
   {"id":"PC011","n":"อยากให้รู้ว่ารักเธอ","a":"Joni Anwar","lv":3,"c":"ไทย","yt":"vr53V_JJfL4"},
   {"id":"PC012","n":"Imagine","a":"John Lennon","lv":3,"c":"สากล","yt":"b0Mh6PKsfbY"},
@@ -306,74 +307,76 @@ const SONGS = [
   {"id":"PC014","n":"คู่กรรม","a":"ต้อมเรนโบว์ กมลชนก","lv":4,"c":"ไทยเก่า","yt":"LpRidc6QPrA"},
   {"id":"PC015","n":"บุพเพสันนิวาส","a":"Ost.บุพเพสันนิวาส | ไอซ์ ศรัณยู วินัยพานิช","lv":3,"c":"ไทย","yt":"gXYbC9VtkAQ"},
   {"id":"PC016","n":"ห่างไกลเหลือเกิน","a":"Boyd Kosiyabong","lv":4,"c":"ไทย","yt":"GH_L8LQv4aE"},
-  {"id":"PC017","n":"รัก - ปุ๊ อัญชลี","a":"ปุ๊ อัญชลี","lv":3,"c":"ไทยเก่า","yt":"K3zvIl8GtNg"},
+  {"id":"PC017","n":"รัก - ปุ๊ อัญชลี","a":"ปุ๊ อัญชลี","lv":3,"c":"ไทย","yt":"K3zvIl8GtNg"},
   {"id":"PC018","n":"Right Here Waiting","a":"Richard Marx","lv":2,"c":"สากล","yt":"Jg4xQKTgAUA"},
   {"id":"PC019","n":"คืนให้ (Sarah)","a":"Sarah","lv":3,"c":"ไทย","yt":"rJjsJeqitK8"},
   {"id":"PC020","n":"รักแรก","a":"นนท์","lv":3,"c":"ไทย","yt":"v5QVsROBV3s"},
-  {"id":"PC021","n":"จังหวะตกหลุมรัก (DIDIxDADA)","a":"DIDIxDADA","lv":2.5,"c":"ไทย","yt":"37XMPlg7yOk"},
-  {"id":"PC022","n":"ความรัก (แนน สาธิดา)","a":"แนน สาธิดา","lv":3,"c":"ไทยเก่า","yt":"_l47odStyx0"},
-  {"id":"PC023","n":"ดาว (Ally)","a":"Ally","lv":4,"c":"ไทย","yt":"UE7GbBXVHsI"},
-  {"id":"PC024","n":"When This Rain Stops (Wendy)","a":"Wendy","lv":3,"c":"สากล","yt":"1_NzTYE52Xk"},
-  {"id":"PC025","n":"ลั่นทม (Cocktail)","a":"Cocktail","lv":3,"c":"ไทย","yt":"hZirNSIAcEE"},
-  {"id":"PC026","n":"สภาวะทิ้งตัว (แดน)","a":"แดน","lv":3,"c":"ไทย","yt":"NrgceqBhvYk"},
+  {"id":"PC021","n":"จังหวะตกหลุมรัก","a":"DIDIxDADA","lv":2.5,"c":"ไทย","yt":"37XMPlg7yOk"},
+  {"id":"PC022","n":"ความรัก","a":"แนน สาธิดา","lv":3,"c":"ไทยเก่า","yt":"_l47odStyx0"},
+  {"id":"PC023","n":"ดาว","a":"Ally","lv":4,"c":"ไทย","yt":"UE7GbBXVHsI"},
+  {"id":"PC024","n":"When This Rain Stops","a":"Wendy","lv":3,"c":"เกาหลี","yt":"1_NzTYE52Xk"},
+  {"id":"PC025","n":"ลั่นทม","a":"Cocktail","lv":3,"c":"ไทย","yt":"hZirNSIAcEE"},
+  {"id":"PC026","n":"สภาวะทิ้งตัว","a":"แดน วรเวช","lv":3,"c":"ไทย","yt":"NrgceqBhvYk"},
   {"id":"PC027","n":"Mariage de Amour","a":"Richard Clayderman","lv":4,"c":"บรรเลง","yt":"Z-zfpobvJmQ"},
   {"id":"PC028","n":"My Heart Will Go On (Titanic)","a":"Celine Dion","lv":3,"c":"สากล","yt":"6TJ2GLbEHlY"},
   {"id":"PC029","n":"A Thousand Years","a":"Christina Perri","lv":3,"c":"สากล","yt":"hPZZuvNkxvc"},
-  {"id":"PC030","n":"รักไม่ต้องการเวลา (Klear)","a":"Klear","lv":3,"c":"ไทย","yt":"oQ_Gzr3AbDI"},
-  {"id":"PC031","n":"คือหัตถาครองพิภพ (ศรัณย่า)","a":"ศรัณย่า","lv":3,"c":"ไทยเก่า","yt":"cZCKyg742sQ"},
-  {"id":"PC032","n":"เธอหมุนรอบฉัน ฉันหมุนรอบเธอ","a":"เฉลียง","lv":3,"c":"ไทย","yt":"-CqXtqFOVLw"},
+  {"id":"PC030","n":"รักไม่ต้องการเวลา","a":"Klear","lv":3,"c":"ไทย","yt":"oQ_Gzr3AbDI"},
+  {"id":"PC031","n":"คือหัตถาครองพิภพ","a":"ศรัณย่า","lv":3,"c":"ไทยเก่า","yt":"cZCKyg742sQ"},
+  {"id":"PC032","n":"เธอหมุนรอบฉัน ฉันหมุนรอบเธอ","a":"เฉลียง","lv":3,"c":"ไทยเก่า","yt":"-CqXtqFOVLw"},
   {"id":"PC033","n":"Nothing's Gonna Change My Love","a":"George Benson","lv":4,"c":"สากล","yt":"PR2_jpoAEfk"},
-  {"id":"PC034","n":"ใจรัก (สุชาติ ชวางกูร)","a":"สุชาติ ชวางกูร","lv":3,"c":"ไทยเก่า","yt":"hLc8cM1qLro"},
-  {"id":"PC035","n":"Love Story (Francis Lai)","a":"Francis Lai","lv":5,"c":"บรรเลง","yt":"Cp5XkKrbQLY"},
+  {"id":"PC034","n":"ใจรัก","a":"สุชาติ ชวางกูร","lv":3,"c":"ไทยเก่า","yt":"hLc8cM1qLro"},
+  {"id":"PC035","n":"Love Story","a":"Francis Lai","lv":5,"c":"บรรเลง","yt":"Cp5XkKrbQLY"},
   {"id":"PC036","n":"ความในใจ","a":"OST.ปริศนา","lv":2,"c":"ไทยเก่า","yt":"GFpvR1brsRk"},
   {"id":"PC037","n":"หน้าที่ของความรัก","a":"PAUSE Feat. เล็ก พงษธร","lv":3,"c":"ไทย","yt":"pvRc-1Y5h60"},
   {"id":"PC038","n":"A Rocket to the Moon","a":"A Rocket to the Moon","lv":3,"c":"สากล","yt":"G27kBKgzBMQ"},
   {"id":"PC039","n":"แต่ปางก่อน","a":"อ๊อด คีรีบูน-โอ ปุยฝ้าย","lv":3,"c":"ไทยเก่า","yt":"CL0h_n8oW3g"},
   {"id":"PC040","n":"สายชล","a":"จันทนีย์ อูนากูล","lv":2,"c":"ไทยเก่า","yt":"PNvlNfkQ6Kc"},
-  {"id":"PC041","n":"Endless Rain","a":"X-Japan","lv":4,"c":"สากล","yt":"LN5_OeRyUDo"},
+  {"id":"PC041","n":"Endless Rain","a":"X-Japan","lv":4,"c":"ญี่ปุ่น","yt":"LN5_OeRyUDo"},
   {"id":"PC042","n":"Last Christmas","a":"Wham!","lv":3.5,"c":"สากล","yt":"tG1WRCGHg8A"},
   {"id":"PC043","n":"รู้ไหมว่าฉันคิดถึง","a":"เบิร์ด ธงไชย แมคอินไตย์","lv":3,"c":"ไทย","yt":"5V_N3LJvqRo"},
   {"id":"PC044","n":"ปัญหาของฉัน (The Trouble Is)","a":"Ost.หนึ่งในร้อย | Violette Wautier","lv":3,"c":"ไทย","yt":"Y34lK0QUCvA"},
   {"id":"PC045","n":"Impromptu Waltz in A Major","a":"ToR Saksit","lv":3.5,"c":"บรรเลง","yt":"kQzFJ6mdTW4"},
-  {"id":"PC046","n":"Tifa's Theme (Final Fantasy 7)","a":"Nobuo Uematsu","lv":3.5,"c":"OST","yt":"kei61gOiERE"},
+  {"id":"PC046","n":"Tifa's Theme (Final Fantasy 7)","a":"Nobuo Uematsu","lv":3.5,"c":"ญี่ปุ่น","yt":"kei61gOiERE"},
   {"id":"PC047","n":"Number One Girl","a":"Rosé","lv":3,"c":"เกาหลี","yt":"LFFlvvyA-dA"},
-  {"id":"PC048","n":"ทำไมต้องเธอ","a":"เบิร์ด ธงชัย","lv":3,"c":"ไทยเก่า","yt":"1pbE9dDN6o4"},
+  {"id":"PC048","n":"ทำไมต้องเธอ","a":"เบิร์ด ธงชัย","lv":3,"c":"ไทย","yt":"1pbE9dDN6o4"},
   {"id":"PC049","n":"รักแรกพบ","a":"Tattoo Colour","lv":3.5,"c":"ไทย","yt":"kEzvGJUQjAE"},
   {"id":"PC050","n":"Canon [Hard] (Piano Folder Ver.)","a":"Piano Folder","lv":4.5,"c":"บรรเลง","yt":"H2FrOrWO0Ro"},
   {"id":"PC051","n":"กาลเวลาพิสูจน์รักแท้","a":"NuNew","lv":3,"c":"ไทย","yt":"ymFFCQ-CWUs"},
-  {"id":"PC052","n":"รักแท้อยู่เหนือกาลเวลา","a":"ป็อป ปองกูล","lv":2.5,"c":"ไทยเก่า","yt":"A9Rtas-pBqk"},
+  {"id":"PC052","n":"รักแท้อยู่เหนือกาลเวลา","a":"ป็อป ปองกูล","lv":2.5,"c":"ไทย","yt":"A9Rtas-pBqk"},
   {"id":"PC053","n":"ครึ่งหนึ่งของชีวิต","a":"แอม เสาวลักษณ์","lv":2.5,"c":"ไทย","yt":"6IeP1_tr-p8"},
   {"id":"PC054","n":"เพลงของเธอ","a":"ปาน ธนพร","lv":3.5,"c":"ไทย","yt":"972kELL4w0o"},
   {"id":"PC055","n":"รักเธอ (Piano Version)","a":"ToR Saksit","lv":4.5,"c":"ไทย","yt":"NW9iEJ2YW7s"},
-  {"id":"PC056","n":"Orange (Treasure)","a":"Treasure","lv":3,"c":"เกาหลี","yt":"7KBxIxLQiYQ"},
-  {"id":"PC057","n":"คนสุดท้าย (อัสนี วสันต์)","a":"อัสนี วสันต์","lv":2.5,"c":"ไทยเก่า","yt":"JPfbj5IygX8"},
-  {"id":"PC058","n":"เพราะอะไร (ป็อด)","a":"ป็อด","lv":3,"c":"ไทยเก่า","yt":"3ZAJAImoqWA"},
+  {"id":"PC056","n":"Orange","a":"Treasure","lv":3,"c":"เกาหลี","yt":"7KBxIxLQiYQ"},
+  {"id":"PC057","n":"คนสุดท้าย","a":"อัสนี วสันต์","lv":2.5,"c":"ไทย","yt":"JPfbj5IygX8"},
+  {"id":"PC058","n":"เพราะอะไร","a":"ป๊อด ธนชัย","lv":3,"c":"ไทย","yt":"3ZAJAImoqWA"},
   {"id":"PC059","n":"Die with a Smile","a":"Lady Gaga & Bruno Mars","lv":3,"c":"สากล","yt":"UoB1cbsyEBA"},
   {"id":"PC060","n":"ลาวดวงเดือน","a":"เพลงไทยเดิม (พระเจ้าบรมวงศ์เธอ กรมหมื่นพิชัยมหินทโรดม)","lv":3,"c":"ไทยเก่า","yt":"bq8cGBYPEiY"},
   {"id":"PC061","n":"คำเชย ๆ","a":"big & the superband","lv":2.5,"c":"ไทย","yt":"lasy6wuRWDM"},
-  {"id":"PC062","n":"Eyes on Me (FF8 Julia Ver.)","a":"Nobuo Uematsu","lv":4,"c":"บรรเลง","yt":"jxMF8YGZuUs"},
+  {"id":"PC062","n":"Eyes on Me (FF8 Julia Ver.)","a":"Nobuo Uematsu","lv":4,"c":"ญี่ปุ่น","yt":"jxMF8YGZuUs"},
   {"id":"PC063","n":"อย่างที่ฉันนั้นเป็นของเธอ","a":"OST. Affair รักเล่นกล - ซอนญ่า x ลูกหมี","lv":3,"c":"ไทย","yt":"MOyfiAldsAU"},
-  {"id":"PC064","n":"เพลงรัก (Three Man Down)","a":"Three Man Down","lv":3.5,"c":"ไทย","yt":"9Osi0M6julE"},
-  {"id":"PC065","n":"How Far I'll Go Easy","a":"Disney","lv":2,"c":"บรรเลง","yt":"luxcQEUzIeo"},
+  {"id":"PC064","n":"เพลงรัก","a":"Three Man Down","lv":3.5,"c":"ไทย","yt":"9Osi0M6julE"},
+  {"id":"PC065","n":"How Far I'll Go Easy","a":"Ost. Moana","lv":2,"c":"สากล","yt":"luxcQEUzIeo"},
   {"id":"PC066","n":"น้ำเซาะทราย Key: Em (Hard)","a":"จรัส เศตาภรณ์","lv":4,"c":"ไทยเก่า","yt":"w_AkG-_JgTA"},
-  {"id":"PC067","n":"ทรายกับทะเล","a":"นันทิดา แก้วบัวสาย","lv":3,"c":"ไทย","yt":"-diD1qH4q-I"},
+  {"id":"PC067","n":"ทรายกับทะเล","a":"นันทิดา แก้วบัวสาย","lv":3,"c":"ไทยเก่า","yt":"-diD1qH4q-I"},
   {"id":"PC068","n":"Edelweiss","a":"The Man In The High Castle (Main Theme)","lv":2,"c":"สากล","yt":"WbH0NWdS60Q"},
-  {"id":"PC069","n":"Love Me (Yiruma)","a":"Yiruma","lv":4,"c":"บรรเลง","yt":"cxAzimb7R6Q"},
-  {"id":"PC070","n":"ข้างกาย (Safeplanet)","a":"Safeplanet","lv":4,"c":"ไทย","yt":"0616YHZRf5Q"},
+  {"id":"PC069","n":"Love Me","a":"Yiruma","lv":4,"c":"บรรเลง","yt":"cxAzimb7R6Q"},
+  {"id":"PC070","n":"ข้างกาย","a":"Safeplanet","lv":4,"c":"ไทย","yt":"0616YHZRf5Q"},
   {"id":"PC071","n":"ใจสมใจ","a":"อูน TheChanisara","lv":2.5,"c":"ไทย","yt":"kFH6LuYFFug"},
   {"id":"PC072","n":"Always with Me (Spirited Away)","a":"Joe Hisaishi","lv":2,"c":"บรรเลง","yt":"TCo2wSNnJKU"},
-  {"id":"PC073","n":"พระจันทร์แทนใจ (月亮代表我的心)","a":"เติ้งลี่จวิน","lv":2.5,"c":"ไทย","yt":"Q452sOYA65k"},
+  {"id":"PC073","n":"พระจันทร์แทนใจ (月亮代表我的心)","a":"เติ้งลี่จวิน","lv":2.5,"c":"จีน","yt":"Q452sOYA65k"},
   {"id":"PC074","n":"ว่าว","a":"มีนตรา อินทิรา","lv":3,"c":"ไทย","yt":"cRv6f5he2DM"},
   {"id":"PC075","n":"If I Ain't Got You","a":"Alicia Keys","lv":4,"c":"สากล","yt":"IqztbYvdV7A"},
   {"id":"PC076","n":"Beautiful in White","a":"Shane Filan","lv":2,"c":"สากล","yt":"sz1e5g_cLjA"},
-  {"id":"PC077","n":"Just for You (BadMixy)","a":"BadMixy","lv":3,"c":"ไทย","yt":"ASYfVmaJVKo"},
-  {"id":"PC078","n":"ฝากใจ (Ink Waruntorn)","a":"Ink Waruntorn","lv":3,"c":"ไทย","yt":"Al-xtkQQTTM"},
+  {"id":"PC077","n":"Just for You","a":"BadMixy","lv":3,"c":"ไทย","yt":"ASYfVmaJVKo"},
+  {"id":"PC078","n":"ฝากใจ","a":"Ink Waruntorn","lv":3,"c":"ไทย","yt":"Al-xtkQQTTM"},
   {"id":"PC079","n":"A Lover's Concerto","a":"Kelly Chen","lv":2,"c":"สากล","yt":"3Q9tQO-hmhQ"},
-  {"id":"PC080","n":"Say Anything (X-Japan)","a":"X-Japan","lv":3.5,"c":"สากล","yt":"IReAygWPxZ4"},
+  {"id":"PC080","n":"Say Anything","a":"X-Japan","lv":3.5,"c":"ญี่ปุ่น","yt":"IReAygWPxZ4"},
   {"id":"PC081","n":"La Maritza","a":"Sylvie Vartan","lv":2.5,"c":"สากล","yt":"BvcayuYmVMI"},
-  {"id":"PC082","n":"Tsuki no Akari [Theme of Love]","a":"Ost. Final Fantasy 4","lv":5,"c":"OST","yt":"cR_f4zl7KOA"},
+  {"id":"PC082","n":"Tsuki no Akari [Theme of Love]","a":"Ost. Final Fantasy 4","lv":5,"c":"ญี่ปุ่น","yt":"cR_f4zl7KOA"},
   {"id":"PC083","n":"ออเจ้าเอย","a":"Ost. บุพเพสันนิวาส","lv":3,"c":"ไทย","yt":"8WP-I-XqBg4"},
-  {"id":"PC084","n":"Ballade Pour Adeline","a":"Richard Clayderman","lv":4,"c":"บรรเลง","yt":"9Md3ipmg2bc"}
+  {"id":"PC084","n":"Ballade Pour Adeline","a":"Richard Clayderman","lv":4,"c":"บรรเลง","yt":"9Md3ipmg2bc"},
+  {"id":"PC085","n":"First Love","a":"Utada","lv":3,"c":"ญี่ปุ่น","yt":"8dBg-5i6wBI"},
+  {"id":"PC089","n":"Wonderful Tonight","a":"Eric Clapton","lv":3,"c":"สากล","yt":"LHxfIlymSIE"}
 ];
 /* ======================================= */
 
@@ -522,7 +525,53 @@ $('q').addEventListener('input', render);
 $('lineBtn').href = LINE_URL;
 $('seriesBtn').href = lineMsg('อยากดูชุดเพลง Piano Series' + srcLine);
 $('yr').textContent = new Date().getFullYear();
+
+/* ===== โหลดรายการเพลงจาก Google Sheet ===== */
+function parseCSV(t){
+  const rows=[]; let row=[], f='', q=false;
+  for (let i=0;i<t.length;i++){
+    const ch=t[i];
+    if (q){ if (ch==='"'){ if (t[i+1]==='"'){ f+='"'; i++; } else q=false; } else f+=ch; }
+    else if (ch==='"') q=true;
+    else if (ch===','){ row.push(f); f=''; }
+    else if (ch==='\n'){ row.push(f); rows.push(row); row=[]; f=''; }
+    else if (ch!=='\r') f+=ch;
+  }
+  if (f!=='' || row.length){ row.push(f); rows.push(row); }
+  return rows;
+}
+function ytId(v){
+  v=(v||'').trim(); if (/^[\w-]{11}$/.test(v)) return v;
+  const m=v.match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/); return m ? m[1] : '';
+}
+const FALLBACK_YT = Object.fromEntries(SONGS.map(x => [x.id, x.yt])); // ลิงก์เดิมของเพลงที่มีอยู่แล้ว
+async function loadSheet(){
+  if (!SHEET_CSV) return;
+  try {
+    const res = await fetch(SHEET_CSV, {cache:'no-store'});
+    if (!res.ok) return;
+    const rows = parseCSV(await res.text());
+    const h = rows.findIndex(r => (r[0]||'').trim() === 'ID');
+    if (h < 0) return;
+    const col = name => rows[h].findIndex(x => x.trim().toLowerCase() === name.toLowerCase());
+    const ytCol = col('YouTube') >= 0 ? col('YouTube') : col('ตัวอย่างเพลง');
+    const C = {id:0, n:col('ชื่อเพลง'), a:col('ศิลปิน'), lv:col('Level'), c:col('Category'), yt:ytCol};
+    if (C.n < 0 || C.yt < 0) return;
+    const list = [];
+    rows.slice(h+1).forEach(r => {
+      const id=(r[C.id]||'').trim(), n=(r[C.n]||'').trim(), yt=ytId(r[C.yt]) || FALLBACK_YT[id] || '';
+      if (!/^PC\d+$/.test(id) || !n || !yt) return;
+      list.push({id, n, a:(r[C.a]||'').trim(), lv:parseFloat(r[C.lv])||0, c:(r[C.c]||'').trim()||'อื่นๆ', yt});
+    });
+    if (list.length < 10) return; // กันกรณีข้อมูลผิดพลาด: ใช้รายการสำรองแทน
+    SONGS.length = 0; list.forEach(x => SONGS.push(x));
+    Object.keys(byId).forEach(k => delete byId[k]); SONGS.forEach(x => byId[x.id] = x);
+    for (let i = picked.length - 1; i >= 0; i--) if (!byId[picked[i]]) picked.splice(i, 1);
+    render(); tray();
+  } catch (e) { /* ใช้รายการสำรอง */ }
+}
 render(); if (lvF) $('songs').scrollIntoView();
+loadSheet();
 </script>
 </body>
 </html>
