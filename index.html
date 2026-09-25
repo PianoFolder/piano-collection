@@ -470,7 +470,7 @@ function openPay(ids){
   $('payTotal').textContent = fmt(PRICE[n]);
   $('acct').innerHTML = PAY.bank + '<br><span class="no" id="accNo">' + PAY.show + '</span><br>' + PAY.name + '<br><button class="copy" id="copyBtn" type="button">คัดลอกเลขบัญชี</button>';
   $('copyBtn').onclick = () => { navigator.clipboard && navigator.clipboard.writeText(PAY.no).then(() => $('copyBtn').textContent = '✓ คัดลอกแล้ว'); };
-  $('paySend').href = lineMsg(ORDER_HEAD + ' ' + n + ' เพลง (โอน ' + fmt(PRICE[n]) + ')\n' + ids.map(id => id + ' ' + byId[id].n).join('\n') + srcLine);
+  $('paySend').href = lineMsg(ORDER_HEAD + ' ' + n + ' เพลง\n(ชำระ ' + fmt(PRICE[n]) + ')\n\n' + ids.map(id => id + ': ' + byId[id].n).join('\n') + (srcLine ? '\n' + srcLine : ''));
   $('payModal').classList.add('open');
 }
 $('payBack').onclick = () => $('payModal').classList.remove('open');
